@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kuis &TEAM - Run Wild</title>
+  <style>
+    body {
+      font-family: 'Monospace';
+      text-align: center;
+      padding: 20px;
+      background: url('Entim.jpeg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: rgb(195,245,194);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .question {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: rgb(129,231,128);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background-color: rgb(100,200,100);
+    }
+    #score {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>💚 ANDTEAM 💚</h1>
+    <div id="quiz">
+      <p class="question" id="question"></p>
+      <div id="answers"></div>
+    </div>
+    <p id="score"></p>
+  </div>
+
+  <!-- Audio tersembunyi -->
+  <audio id="bg-music" autoplay hidden></audio>
+
+  <script>
+    // Playlist musik
+    const playlist = [
+      'Run Wild.mp3',
+      'Warcry.mp3',
+      'Goinblind.mp3',
+      'Deerhunter.mp3'
+    ];
+
+    let currentSong = 0;
+    const audio = document.getElementById('bg-music');
+
+    function playSong(index) {
+      audio.src = playlist[index];
+      audio.play().catch(() => {
+        // Browser mungkin mencegah autoplay tanpa interaksi
+        document.addEventListener('click', () => {
+          audio.play();
+        }, { once: true });
+      });
+    }
+
+    audio.addEventListener('ended', () => {
+      currentSong++;
+      if (currentSong >= playlist.length) currentSong = 0;
+      playSong(currentSong);
+    });
+
+    playSong(currentSong);
+
+    const questions = [
+      {
+        question: "Apa arti nama grup '&TEAM'?",
+        answers: ["Satu tim dan bersatu", "Tim berkekuatan super", "Tim penuh cinta", "Tim yang suka ngemil"],
+        correct: 0
+      },
+      {
+        question: "Apa makanan favorit saya?",
+        answers: ["Sushi", "Nasi Goreng", "Mie Ayam", "Bakso"],
+        correct: 0
+      },
+      {
+        question: "Tahun berapa &TEAM debut?",
+        answers: ["2021", "2022", "2023", "2020"],
+        correct: 1
+      },
+      {
+        question: "Apa lagu favorit saya? (Bisa lebih dari satu: War Cry & TEAM)",
+        answers: ["Under the Skin", "War Cry", "Run Wild", "Buzz Love"],
+        correct: [1, 2]
+      },
+      {
+        question: "Berapa jumlah member &TEAM saat debut?",
+        answers: ["9", "8", "7", "10"],
+        correct: 0
+      },
+      {
+        question: "Siapa yang tertua di &TEAM?",
+        answers: ["EJ", "K", "Fuma", "Nicholas"],
+        correct: 1
+      },
+      {
+        question: "Siapa member termuda (maknae) di &TEAM?",
+        answers: ["Maki", "Taki", "Harua", "Yuma"],
+        correct: 0
+      },
+      {
+        question: "Apa nama variety show pre-debut &TEAM?",
+        answers: ["&AUDITION – The Howling", "TEAM FIGHT", "RUN TO YOU", "THE FINAL MATCH"],
+        correct: 0
+      },
+      {
+        question: "Apa warna dominan di logo resmi &TEAM?",
+        answers: ["Hitam dan putih", "Biru dan perak", "Emas dan merah", "Hijau neon"],
+        correct: 0
+      },
+      {
+        question: "Siapa member &TEAM yang dikenal paling jago ngedance?",
+        answers: ["K", "Fuma", "Jo", "Nicholas"],
+        correct: 0
+      },
+  {
+    question: "Apa zodiak K dari &TEAM?",
+    answers: ["Virgo", "Libra", "Scorpio", "Leo"],
+    correct: 1
+  },
+  {
+    question: "Siapa member &TEAM yang berasal dari Taiwan?",
+    answers: ["Nicholas", "Fuma", "EJ", "Jo"],
+    correct: 0
+  },
+  {
+    question: "Apa warna official lightstick &TEAM?",
+    answers: ["Hitam dan biru", "Silver dan biru muda", "Putih dan emas", "Biru navy dan putih"],
+    correct: 3
+  },
+  {
+    question: "Siapa member yang paling tinggi di &TEAM saat debut?",
+    answers: ["EJ", "Nicholas", "Yuma", "Fuma"],
+    correct: 1
+  },
+  {
+    question: "Apa makanan favorit Jo?",
+    answers: ["Kari", "Ramen", "Sushi", "Takoyaki"],
+    correct: 0
+  },
+  {
+    question: "Siapa member &TEAM yang punya julukan 'happy virus'?",
+    answers: ["Taki", "Jo", "K", "Harua"],
+    correct: 0
+  },
+  {
+    question: "Apa nama album &TEAM yang dirilis tahun 2023?",
+    answers: ["First Howling: NOW", "First Howling: ME", "First Howling: WE", "Second Howling: END"],
+    correct: 0
+  },
+  {
+    question: "Apa salah satu lagu b-side dari album 'First Howling: WE'?",
+    answers: ["Running with the pack", "Road Not Taken", "Scent of you", "Firework"],
+    correct: 2
+  },
+  {
+    question: "Siapa yang dikenal sebagai 'main rapper' di &TEAM?",
+    answers: ["Nicholas", "EJ", "Yuma", "Fuma"],
+    correct: 0
+  },
+  {
+    question: "Apa hobi Harua?",
+    answers: ["Fotografi", "Main basket", "Nonton film", "Masak"],
+    correct: 0
+  },
+  {
+    question: "Apa slogan atau catchphrase fandom LUNÉ?",
+    answers: ["Together as one", "Always with the moon", "Shining with &TEAM", "You are our moon"],
+    correct: 3
+  },
+  {
+    question: "Apa jenis konten YouTube &TEAM yang populer?",
+    answers: ["Dance Practice", "Cooking Show", "Travel Vlog", "Mukbang"],
+    correct: 0
+  },
+  {
+    question: "Di negara mana &TEAM debut secara resmi?",
+    answers: ["Jepang", "Korea Selatan", "Taiwan", "Thailand"],
+    correct: 0
+  },
+  {
+    question: "Apa nama program dokumenter &TEAM di YouTube?",
+    answers: ["&TEAM DOCUMENTARY – The Path", "Journey of &TEAM", "Rise of &TEAM", "LUNÉ Story"],
+    correct: 0
+  },
+  {
+    question: "Siapa member yang lahir tahun 2005?",
+    answers: ["Jo", "Taki", "Harua", "Yuma"],
+    correct: 0
+  },
+  {
+    question: "Apa warna favorit K?",
+    answers: ["Hitam", "Putih", "Merah", "Biru"],
+    correct: 0
+  },
+  {
+    question: "Siapa member &TEAM yang bisa berbicara 3 bahasa?",
+    answers: ["Nicholas", "EJ", "Fuma", "Taki"],
+    correct: 0
+  },
+  {
+    question: "Apa lirik awal lagu 'Under the Skin'?",
+    answers: ["I was lost in the dark", "Like a shadow", "Under the skin, we are", "I was running"],
+    correct: 2
+  },
+  {
+    question: "Apa arti konsep lagu 'Scent of you' menurut para member?",
+    answers: ["Rasa rindu yang mendalam", "Koneksi emosional melalui aroma", "Cinta tak terlihat", "Mencari jati diri"],
+    correct: 1
+  },
+  {
+    question: "Apa konten spesial yang dirilis &TEAM saat anniversary debut mereka?",
+    answers: ["Dance Relay", "Special Fan Video", "Behind the Scene Clip", "All of the above"],
+    correct: 3
+  },
+  {
+    question: "Siapa member &TEAM yang hobi menulis lirik?",
+    answers: ["Yuma", "EJ", "Fuma", "K"],
+    correct: 2
+  },
+  {
+    question: "Apa hal unik tentang logo &TEAM?",
+    answers: ["Terdiri dari simbol & yang dimodifikasi", "Memiliki bentuk seperti huruf T", "Berbentuk bulan sabit", "Berwarna-warni"],
+    correct: 0
+  },
+  {
+    question: "Apa arti nama 'Jo' dalam bahasa Jepang?",
+    answers: ["Kebesaran", "Keberanian", "Ketenangan", "Semangat"],
+    correct: 1
+  },
+  {
+    question: "Apa konsep dari lagu 'War Cry'?",
+    answers: ["Perjuangan dan kekuatan", "Cinta dan kedamaian", "Petualangan dan fantasi", "Persahabatan sejati"],
+    correct: 0
+  },
+  {
+    question: "Siapa member yang terkenal kalem dan misterius?",
+    answers: ["Harua", "Fuma", "K", "Yuma"],
+    correct: 0
+  },
+  {
+    question: "Siapa leader dari &TEAM?",
+    answers: ["K", "Fuma", "Nicholas", "EJ"],
+    correct: 0
+  },
+  {
+    question: "Apa nama album debut &TEAM?",
+    answers: ["First Howling: ME", "First Howling: WE", "First Howling: NOW", "First Howling: START"],
+    correct: 1
+  },
+  {
+    question: "Siapa member &TEAM yang merupakan mantan kontestan I-LAND?",
+    answers: ["K dan EJ", "Nicholas dan Jo", "Yuma dan Harua", "Taki dan Jo"],
+    correct: 0
+  },
+  {
+    question: "Siapa member yang lahir di Korea Selatan?",
+    answers: ["EJ", "Nicholas", "Taki", "Harua"],
+    correct: 0
+  },
+  {
+    question: "Apa arti dari nama fandom LUNÉ?",
+    answers: ["Bulan yang bersinar untuk &TEAM", "Cahaya abadi", "Tim impian", "Harapan dan cinta"],
+    correct: 0
+  },
+  {
+    question: "Siapa member &TEAM yang dikenal suka aegyo (tingkah imut)?",
+    answers: ["Taki", "Harua", "Fuma", "Jo"],
+    correct: 0
+  },
+  {
+    question: "Siapa member yang dikenal paling pendiam dan kalem?",
+    answers: ["Harua", "EJ", "K", "Yuma"],
+    correct: 0
+  },
+  {
+    question: "Apa single kedua &TEAM setelah debut?",
+    answers: ["Firework", "Scent of you", "War Cry", "Road Not Taken"],
+    correct: 2
+  },
+  {
+    question: "Siapa member &TEAM yang lahir pada tanggal 21 Mei 2002?",
+    answers: ["Fuma", "Nicholas", "Yuma", "Jo"],
+    correct: 0
+  },
+  {
+    question: "Siapa maknae (termuda) di &TEAM?",
+    answers: ["Jo", "Taki", "Harua", "Yuma"],
+    correct: 0
+  },
+  {
+    question: "Siapa member yang berasal dari Jepang dan lahir tahun 2004?",
+    answers: ["Harua", "Taki", "Yuma", "Jo"],
+    correct: 2
+  },
+  {
+    question: "Apa nama lagu &TEAM yang liriknya memiliki makna tentang saling menguatkan?",
+    answers: ["Scent of you", "Under the Skin", "FIREWORK", "Buzz Love"],
+    correct: 1
+  },
+  {
+    question: "Siapa member &TEAM yang paling ahli dalam menari?",
+    answers: ["K", "Jo", "Nicholas", "Taki"],
+    correct: 0
+  },
+  {
+    question: "Siapa member &TEAM yang punya julukan 'Smile Angel'?",
+    answers: ["Taki", "Jo", "Yuma", "Fuma"],
+    correct: 1
+  },
+  {
+    question: "Kapan &TEAM debut resmi?",
+    answers: ["9 Desember 2022", "10 Desember 2022", "11 November 2022", "1 Januari 2023"],
+    correct: 0
+  },
+  {
+    question: "Apa nama channel YouTube resmi &TEAM?",
+    answers: ["andTEAM OFFICIAL", "&TEAM", "HYBE LABELS JAPAN", "&TEAM JAPAN"],
+    correct: 2
+  },
+  {
+    question: "Apa nama dance relay pertama yang &TEAM rilis?",
+    answers: ["Under the Skin", "Buzz Love", "War Cry", "Road Not Taken"],
+    correct: 0
+  },
+  {
+    question: "Siapa member yang suka olahraga basket?",
+    answers: ["Jo", "EJ", "K", "Nicholas"],
+    correct: 3
+  },
+  {
+    question: "Siapa member yang sering pakai bandana?",
+    answers: ["K", "Nicholas", "Yuma", "Jo"],
+    correct: 0
+  },
+  {
+    question: "Siapa member yang pernah tinggal di luar negeri?",
+    answers: ["Nicholas", "EJ", "K", "Taki"],
+    correct: 0
+  },
+  {
+    question: "Apa konsep utama &TEAM saat debut?",
+    answers: ["Werewolf/Serigala", "Alien", "Angel", "Time traveler"],
+    correct: 0
+  },
+  {
+    question: "Siapa visual utama di &TEAM?",
+    answers: ["Harua", "K", "Jo", "Fuma"],
+    correct: 0
+  },
+  {
+    question: "Siapa member &TEAM yang suka menggambar?",
+    answers: ["Harua", "Taki", "Yuma", "EJ"],
+    correct: 2
+  },
+  {
+    question: "Siapa member &TEAM yang paling suka dessert manis?",
+    answers: ["Jo", "Taki", "Harua", "Nicholas"],
+    correct: 1
+  },
+  {
+    question: "Apa lagu &TEAM yang pernah dijadikan BGM untuk konten LUNÉ?",
+    answers: ["Road Not Taken", "Buzz Love", "Running with the pack", "Scent of you"],
+    correct: 3
+  },
+  {
+    question: "Siapa member &TEAM yang punya suara paling dalam?",
+    answers: ["Fuma", "EJ", "Yuma", "Nicholas"],
+    correct: 0
+  },
+  {
+    question: "Apa hobi Jo selain menyanyi dan menari?",
+    answers: ["Nonton film", "Main game", "Bermain piano", "Skateboard"],
+    correct: 2
+  },
+  {
+    question: "Apa nama lagu yang dinyanyikan &TEAM di MAMA 2022?",
+    answers: ["Under the Skin", "Firework", "Road Not Taken", "Scent of you"],
+    correct: 0
+  },
+  {
+    question: "Apa warna official untuk fandom LUNÉ?",
+    answers: ["Lunar Silver", "Moonlight White", "Midnight Blue", "Ocean Sky"],
+    correct: 0
+  },
+  {
+    question: "Apa genre musik utama dari &TEAM?",
+    answers: ["Pop", "Rock", "Pop dengan sentuhan EDM dan hiphop", "Ballad"],
+    correct: 2
+  }
+];
+    let current = 0;
+    let score = 0;
+
+    function showQuestion() {
+      if (current < questions.length) {
+        document.getElementById("question").innerText = questions[current].question;
+        const answerDiv = document.getElementById("answers");
+        answerDiv.innerHTML = "";
+
+        questions[current].answers.forEach((answer, index) => {
+          const btn = document.createElement("button");
+          btn.innerText = answer;
+          btn.className = "btn";
+          btn.onclick = () => checkAnswer(index);
+          answerDiv.appendChild(btn);
+        });
+      } else {
+        document.getElementById("quiz").innerHTML = `<h2>🎉 Kuis Selesai!</h2><p>Skor kamu: ${score}/${questions.length}</p>`;
+        let pesan;
+        if(score === questions.length) {
+          pesan = "KAMU LUNÉ SEJATI 💚💯";
+        } else if(score >= 7) {
+          pesan = "Hebat! Kamu sayang mereka beneran 😍";
+        } else if(score >= 4) {
+          pesan = "Lumayan~ ayo kenalan lagi sama membernya! 😉";
+        } else {
+          pesan = "Yuk belajar lagi, LUNÉ! 😅";
+        }
+        document.getElementById("score").innerText = pesan;
+      }
+    }
+
+    function checkAnswer(selected) {
+      let correctAnswer = questions[current].correct;
+      if (Array.isArray(correctAnswer)) {
+        if (correctAnswer.includes(selected)) {
+          score++;
+        }
+      } else {
+        if (selected === correctAnswer) {
+          score++;
+        }
+      }
+      current++;
+      showQuestion();
+    }
+
+    showQuestion();
+  </script>
+</body>
+</Warcry
